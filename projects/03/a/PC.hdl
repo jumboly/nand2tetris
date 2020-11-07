@@ -16,5 +16,16 @@ CHIP PC {
     OUT out[16];
 
     PARTS:
-    // Put your code here:
+    // reset
+    Mux16(a=loop, /*b=,*/ sel=reset, out=w1);
+    
+    // load
+    Mux16(a=loop, b=in, sel=load, out=w2);
+
+    // inc
+    Add16(a=loop, b[0]=true, out=w3);
+    
+    //        000     001   010   011   100   101   110   111
+    Mux8Way16(a=loop, b=w1, c=w2, d=w1, e=w3, f=w1, g=w2, h=w1, sel[0]=reset, sel[1]=load, sel[2]=inc, out=w4);
+    Register(in=w4, load=true, out=out, out=loop);
 }
